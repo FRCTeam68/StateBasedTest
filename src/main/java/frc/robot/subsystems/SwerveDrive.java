@@ -82,9 +82,7 @@ public class SwerveDrive extends BaseDriveSubsystem<SwerveDriveState> {
 
   public SwerveDrive() {
           super(dt, KINEMATICS, SwerveDriveState.NEUTRAL);
-    ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
-        
-    
+    ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");    
 
   }
 
@@ -113,6 +111,20 @@ public class SwerveDrive extends BaseDriveSubsystem<SwerveDriveState> {
 //    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
    return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
   }
+
+  public double getFRDegrees(){
+    return dt.getRealModules().get(1).getSteerAngle();
+  }
+  public double getBRDegrees(){
+    return dt.getRealModules().get(3).getSteerAngle();
+  }
+  public double getFLDegrees(){
+    return dt.getRealModules().get(0).getSteerAngle();
+  }
+  public double getBLDegrees(){
+    return dt.getRealModules().get(2).getSteerAngle();
+  }
+
 
   public void drive() {
     setModuleStates(new ChassisSpeeds(Axes.Drive_ForwardBackward.getAxis(),Axes.Drive_LeftRight.getAxis(),Axes.Drive_Rotation.getAxis()));

@@ -18,6 +18,7 @@ import static frc.robot.Constants.DRIVE.FRONT_RIGHT_MODULE_STEER_MOTOR;
 import static frc.robot.Constants.DRIVE.FRONT_RIGHT_MODULE_STEER_OFFSET;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -36,9 +37,13 @@ import frc.wpiClasses.QuadSwerveSim;
 
 public class BearSwerveHelper {
 
+        public static List<SwerveModule> realModules;
+
     public static StateBasedSwerveDrivetrainModel createBearSwerve() {
         passConstants();
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
+
+        realModules = new ArrayList<SwerveModule>();
 
         SwerveModule frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
                 tab.getLayout("Front Left Module", BuiltInLayouts.kList)
@@ -55,14 +60,21 @@ public class BearSwerveHelper {
                 // This is how much the steer encoder is offset from true zero (In our case,
                 // zero is facing straight forward)
                 FRONT_LEFT_MODULE_STEER_OFFSET, "FL");
+        tab.add("FLDegree", frontLeftModule.getSteerAngle());
         SwerveModule frontRightModule = Mk4SwerveModuleHelper.createFalcon500(
                 tab.getLayout("Front Right Module", BuiltInLayouts.kList)
                         .withSize(2, 4)
-                        .withPosition(2, 0),
+                        .withPosition(0, 0),
+                // This can either be STANDARD or FAST depending on your gear configuration
                 Mk4SwerveModuleHelper.GearRatio.L2,
+                // This is the ID of the drive motor
                 FRONT_RIGHT_MODULE_DRIVE_MOTOR,
+                // This is the ID of the steer motor
                 FRONT_RIGHT_MODULE_STEER_MOTOR,
+                // This is the ID of the steer encoder
                 FRONT_RIGHT_MODULE_STEER_ENCODER,
+                // This is how much the steer encoder is offset from true zero (In our case,
+                // zero is facing straight forward)
                 FRONT_RIGHT_MODULE_STEER_OFFSET, "FR");
         SwerveModule backLeftModule = Mk4SwerveModuleHelper.createFalcon500(
                 tab.getLayout("Back Left Module", BuiltInLayouts.kList)
@@ -73,10 +85,10 @@ public class BearSwerveHelper {
                 BACK_LEFT_MODULE_STEER_MOTOR,
                 BACK_LEFT_MODULE_STEER_ENCODER,
                 BACK_LEFT_MODULE_STEER_OFFSET, "BL");
-        SwerveModule backRightModule = Mk4SwerveModuleHelper.createFalcon500(
+       SwerveModule backRightModule = Mk4SwerveModuleHelper.createFalcon500(
                 tab.getLayout("Back Right Module", BuiltInLayouts.kList)
                         .withSize(2, 4)
-                        .withPosition(6, 0),
+                        .withPosition(4, 0),
                 Mk4SwerveModuleHelper.GearRatio.L2,
                 BACK_RIGHT_MODULE_DRIVE_MOTOR,
                 BACK_RIGHT_MODULE_STEER_MOTOR,
@@ -89,6 +101,7 @@ public class BearSwerveHelper {
         modules.add(frontRightModule);
         modules.add(backLeftModule);
         modules.add(backRightModule);
+
         return new StateBasedSwerveDrivetrainModel(modules, gyro);
     }
 

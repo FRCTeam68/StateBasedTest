@@ -4,10 +4,16 @@
 
 package frc.robot;
 
+import java.util.function.DoubleSupplier;
+
+import javax.net.ssl.TrustManager;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -54,6 +60,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    
+    
+    
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -75,6 +84,12 @@ public class Robot extends TimedRobot {
         loopPeriod = (int) (currentTime - prevLoopTime);
         prevLoopTime = currentTime;
         loopCnt++;
+
+        SmartDashboard.putNumber("FR Thingy", RobotContainer.swerveDrive.getFRDegrees());
+        SmartDashboard.putNumber("FL Thingy", RobotContainer.swerveDrive.getFLDegrees());
+        SmartDashboard.putNumber("BR Thingy", RobotContainer.swerveDrive.getBRDegrees());
+        SmartDashboard.putNumber("BL Thingy", RobotContainer.swerveDrive.getBLDegrees());
+    
 
         RobotContainer.swerveDrive.neutral();
         RobotContainer.swerveDrive.process();
@@ -113,13 +128,15 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    
     long prevLoopTime = 0;
 
     while (this.isTeleop() && this.isEnabled()) {
 
       long currentTime = System.currentTimeMillis();
-
+      
       if (currentTime - prevLoopTime >= designatedLoopPeriod) {
+        
 
         loopPeriod = (int) (currentTime - prevLoopTime);
         prevLoopTime = currentTime;
