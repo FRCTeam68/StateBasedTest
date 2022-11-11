@@ -4,16 +4,17 @@
 
 package frc.robot;
 
-import java.util.function.DoubleSupplier;
-
-import javax.net.ssl.TrustManager;
-
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.pathplanner.PathPlannerFollower;
+import frc.robot.Constants.AUTO;
+import frc.robot.auton.Auton;
+import frc.statebasedcontroller.sequence.fundamental.phase.ISequencePhase;
+import frc.statebasedcontroller.sequence.fundamental.sequence.BaseAutonSequence;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -34,6 +35,14 @@ public class Robot extends TimedRobot {
   private int logCounter = 0;
   private int designatedLoopPeriod = 20;
 
+  public static boolean isAutonomous = false;
+  private final SendableChooser<Auton> sendableChooser = new SendableChooser<>();
+  public static BaseAutonSequence<? extends ISequencePhase> chosenAuton;
+  private static long autonStartTime;
+  public static PathPlannerFollower basicAuto;
+  public static PathPlannerFollower basicAuto2;
+
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -41,10 +50,25 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    m_robotContainer = new RobotContainer();
+
+    basicAuto = new PathPlannerFollower("workingpath",AUTO.kMaxSpeedMetersPerSecond, AUTO.kMaxAccelerationMetersPerSecondSquared);
+    basicAuto2 = new PathPlannerFollower("tesingPath",AUTO.kMaxSpeedMetersPerSecond, AUTO.kMaxAccelerationMetersPerSecondSquared);
+
+    
+    Auton.BASIC_AUTON.setPathPlannerFollowers(basicAuto);
+    Auton.BASIC_AUTON2.setPathPlannerFollowers(basicAuto2);
+    
+    sendableChooser.setDefaultOption("Basic Auton", Auton.BASIC_AUTON);
+    sendableChooser.addOption("Curved Auton", Auton.BASIC_AUTON2);
+    sendableChooser.addOption("Basic Auton", Auton.BASIC_AUTON);
+
+    SmartDashboard.putData(sendableChooser);
+
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+
   }
 
   /**
@@ -89,6 +113,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("FL Thingy", RobotContainer.swerveDrive.getFLDegrees());
         SmartDashboard.putNumber("BR Thingy", RobotContainer.swerveDrive.getBRDegrees());
         SmartDashboard.putNumber("BL Thingy", RobotContainer.swerveDrive.getBLDegrees());
+        SmartDashboard.putString("Deploy dir", String.valueOf(Filesystem.getDeployDirectory()));
     
 
         RobotContainer.swerveDrive.neutral();
@@ -107,17 +132,41 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+    chosenAuton = sendableChooser.getSelected().getAuton();
+    chosenAuton.start();
+    autonStartTime = System.currentTimeMillis();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    isAutonomous = this.isAutonomous();
+
+        long prevLoopTime = 0;
+
+        while (this.isAutonomous() && this.isEnabled()) {
+
+            long currentTime = System.currentTimeMillis();
+
+            if (currentTime - prevLoopTime >= designatedLoopPeriod) {
+
+                loopPeriod = (int) (currentTime - prevLoopTime);
+                prevLoopTime = currentTime;
+
+                loopCnt++;
+
+                if (currentTime - autonStartTime > 20) {
+                    chosenAuton.process();
+                }
+                // run processes
+
+                /** Run subsystem process methods here */
+                RobotContainer.swerveDrive.process();
+                //climber.process();
+            }
+
+            Timer.delay(0.001);
+        }
   }
 
   @Override
@@ -143,6 +192,7 @@ public class Robot extends TimedRobot {
         loopCnt++;
 
         RobotContainer.swerveDrive.process();
+        RobotContainer.shooter.process();
 
         RobotContainer.sequencer.process();
 

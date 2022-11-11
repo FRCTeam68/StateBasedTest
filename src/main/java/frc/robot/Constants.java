@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import frc.pathplanner.PathPlannerFollower;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -19,8 +20,11 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    
 
     public static final int NAVX = 19;
+
+    public static final String MANIP_CANBUS = "DADbus";
 
     public final static class ROBOT {
         public static final double MAX_VOLTAGE = 10.0;
@@ -28,7 +32,7 @@ public final class Constants {
         public static final double ROBOT_MASS_kg = 50;
         public static final double ROBOT_MOI_KGM2 = 51; // ?
     }
-
+    
     public final static class DRIVE {
         /**
          * The left-to-right distance between the drivetrain wheels
@@ -83,9 +87,24 @@ public final class Constants {
     }
 
     public static final class AUTO {
+        public static final int kMaxSpeedMetersPerSecond = 5;
+        public static final int kMaxAccelerationMetersPerSecondSquared = 1;
+
         public static final int THETACONTROLLERkP = 0;
         public static final int TRAJECTORYXkP = 0;
         public static final int TRAJECTORYYkP = 0;
         public static final TrapezoidProfile.Constraints THETACONTROLLERCONSTRAINTS = new TrapezoidProfile.Constraints(0,0);
+    }
+
+    public static final class SHOOTER {
+        public static final int LEFT_SHOOTER_MOTOR = 9;
+    public static final int RIGHT_SHOOTER_MOTOR = 10;
+    public static final int AUTON_SHOT = 2646;
+    
+    public static double RELEASE_ANGLE = 60.0; //degrees from horizontal
+    public static double THETA = Math.toRadians(RELEASE_ANGLE); 
+    public static double COMPRESSED_RADIUS = 4; //in
+    public static double FLYWHEEL_RADIUS = 2.0; //in
+    public static double SLIPPERINESS = 0.94;
     }
 }

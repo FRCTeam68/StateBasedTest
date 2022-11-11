@@ -6,14 +6,11 @@ package frc.robot;
 
 import java.util.concurrent.Callable;
 
-import javax.sound.midi.Sequence;
-
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.sequences.SequenceProcessor;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrive;
 
 /**
@@ -25,6 +22,7 @@ import frc.robot.subsystems.SwerveDrive;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public static SwerveDrive swerveDrive;
+  public static Shooter shooter;
   public static SequenceProcessor sequencer;
 
   public static final XboxController m_controller = new XboxController(0);
@@ -50,6 +48,7 @@ public class RobotContainer {
     // ));
 
     swerveDrive = new SwerveDrive();
+    shooter = new Shooter(1500);
     // Configure the button bindings
     sequencer = new SequenceProcessor();
   }
@@ -84,6 +83,28 @@ public class RobotContainer {
     value = Math.copySign(value * value, value);
 
     return value;
+  }
+
+  public enum Buttons{
+    SPEEDSHOOTER(() -> RobotContainer.getController1().getXButton());
+    Callable<Boolean> callable;
+
+    Buttons(Callable<Boolean> callable) {
+        this.callable = callable;
+    }
+
+    public boolean getButton() {
+
+        try {
+
+            return callable.call().booleanValue();
+
+        } catch (Exception ex) {
+
+            return false;
+
+        }
+    }
   }
 
   public enum Axes {
