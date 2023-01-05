@@ -20,6 +20,9 @@ import static frc.robot.Constants.DRIVE.FRONT_RIGHT_MODULE_STEER_OFFSET;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
+import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper.GearRatio;
+
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -85,6 +88,7 @@ public class BearSwerveHelper {
                 BACK_LEFT_MODULE_STEER_MOTOR,
                 BACK_LEFT_MODULE_STEER_ENCODER,
                 BACK_LEFT_MODULE_STEER_OFFSET, "BL");
+                
        SwerveModule backRightModule = Mk4SwerveModuleHelper.createFalcon500(
                 tab.getLayout("Back Right Module", BuiltInLayouts.kList)
                         .withSize(2, 4)
@@ -115,6 +119,7 @@ public class BearSwerveHelper {
         SwerveConstants.THETACONTROLLERkP = AUTO.THETACONTROLLERkP;
         SwerveConstants.TRAJECTORYXkP = AUTO.TRAJECTORYXkP;
         SwerveConstants.TRAJECTORYYkP = AUTO.TRAJECTORYYkP;
+        
         SwerveConstants.THETACONTROLLERCONSTRAINTS = AUTO.THETACONTROLLERCONSTRAINTS;
 
         SwerveConstants.TRACKWIDTH_METERS = DRIVE.TRACKWIDTH_METERS;

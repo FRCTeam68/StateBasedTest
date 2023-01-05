@@ -52,13 +52,12 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_robotContainer = new RobotContainer();
 
-    basicAuto = new PathPlannerFollower("workingpath",AUTO.kMaxSpeedMetersPerSecond, AUTO.kMaxAccelerationMetersPerSecondSquared);
-    basicAuto2 = new PathPlannerFollower("tesingPath",AUTO.kMaxSpeedMetersPerSecond, AUTO.kMaxAccelerationMetersPerSecondSquared);
+    basicAuto = new PathPlannerFollower("straightlinetest",AUTO.kMaxSpeedMetersPerSecond, AUTO.kMaxAccelerationMetersPerSecondSquared);
+    basicAuto2 = new PathPlannerFollower("killamentor",AUTO.kMaxSpeedMetersPerSecond, AUTO.kMaxAccelerationMetersPerSecondSquared);
 
-    
     Auton.BASIC_AUTON.setPathPlannerFollowers(basicAuto);
     Auton.BASIC_AUTON2.setPathPlannerFollowers(basicAuto2);
-    
+
     sendableChooser.setDefaultOption("Basic Auton", Auton.BASIC_AUTON);
     sendableChooser.addOption("Curved Auton", Auton.BASIC_AUTON2);
     sendableChooser.addOption("Basic Auton", Auton.BASIC_AUTON);
@@ -109,6 +108,7 @@ public class Robot extends TimedRobot {
         prevLoopTime = currentTime;
         loopCnt++;
 
+        SmartDashboard.putNumber("Gyro Degrees!!!", RobotContainer.swerveDrive.getGyroscopeRotation().getDegrees());
         SmartDashboard.putNumber("FR Thingy", RobotContainer.swerveDrive.getFRDegrees());
         SmartDashboard.putNumber("FL Thingy", RobotContainer.swerveDrive.getFLDegrees());
         SmartDashboard.putNumber("BR Thingy", RobotContainer.swerveDrive.getBRDegrees());
@@ -132,7 +132,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    chosenAuton = sendableChooser.getSelected().getAuton();
+    chosenAuton = Auton.BASIC_AUTON2.getAuton();
     chosenAuton.start();
     autonStartTime = System.currentTimeMillis();
   }
@@ -140,6 +140,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+
     isAutonomous = this.isAutonomous();
 
         long prevLoopTime = 0;

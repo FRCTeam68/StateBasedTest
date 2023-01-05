@@ -83,6 +83,7 @@ public class SwerveDrive extends BaseDriveSubsystem<SwerveDriveState> {
   public SwerveDrive() {
           super(dt, KINEMATICS, SwerveDriveState.NEUTRAL);
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");    
+    
 
   }
 
@@ -127,7 +128,7 @@ public class SwerveDrive extends BaseDriveSubsystem<SwerveDriveState> {
 
 
   public void drive() {
-    setModuleStates(new ChassisSpeeds(Axes.Drive_ForwardBackward.getAxis(),Axes.Drive_LeftRight.getAxis(),Axes.Drive_Rotation.getAxis()));
+    setModuleStates(new ChassisSpeeds(Axes.Drive_ForwardBackward.getAxis()*Constants.ROBOT.MAX_VELOCITY,Axes.Drive_LeftRight.getAxis()*Constants.ROBOT.MAX_VELOCITY,Axes.Drive_Rotation.getAxis()*Constants.ROBOT.MAX_VELOCITY));
   }
 
   @Override

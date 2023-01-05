@@ -27,10 +27,11 @@ public final class Constants {
     public static final String MANIP_CANBUS = "DADbus";
 
     public final static class ROBOT {
-        public static final double MAX_VOLTAGE = 10.0;
+        public static final double MAX_VOLTAGE = 8;
         public static final Pose2d DFLT_START_POSE = new Pose2d(0,0, new Rotation2d(0));
         public static final double ROBOT_MASS_kg = 50;
         public static final double ROBOT_MOI_KGM2 = 51; // ?
+        public static final double MAX_VELOCITY = 5;
     }
     
     public final static class DRIVE {
@@ -52,12 +53,12 @@ public final class Constants {
 
         public static final int MAX_FWD_REV_SPEED_MPS_EST = 10;
         public static final int MAX_ROTATE_SPEED_RAD_PER_SEC_EST = 0;
-        public static final int MAX_FWD_REV_SPEED_FAST = 0;
-        public static final int MAX_STRAFE_SPEED_FAST = 0;
-        public static final int MAX_ROTATE_SPEED_FAST = 0;
-        public static final int MAX_FWD_REV_SPEED_SLOW = 0;
-        public static final int MAX_STRAFE_SPEED_SLOW = 0;
-        public static final int MAX_ROTATE_SPEED_SLOW = 0;
+        static public final double MAX_FWD_REV_SPEED_FAST = 0.5; // Percent of output power
+        static public final double MAX_STRAFE_SPEED_FAST = 0.5;
+        static public final double MAX_ROTATE_SPEED_FAST = 0.35;
+        static public final double MAX_FWD_REV_SPEED_SLOW = 0.25; // Percent of output power
+        static public final double MAX_STRAFE_SPEED_SLOW = 0.25;
+        static public final double MAX_ROTATE_SPEED_SLOW = 0.25;
 
         /**
          * The front-to-back distance between the drivetrain wheels.
@@ -87,13 +88,16 @@ public final class Constants {
     }
 
     public static final class AUTO {
-        public static final int kMaxSpeedMetersPerSecond = 5;
-        public static final int kMaxAccelerationMetersPerSecondSquared = 1;
+        public static final double kMaxSpeedMetersPerSecond = 5.0;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 5.0;
+        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-        public static final int THETACONTROLLERkP = 0;
-        public static final int TRAJECTORYXkP = 0;
-        public static final int TRAJECTORYYkP = 0;
-        public static final TrapezoidProfile.Constraints THETACONTROLLERCONSTRAINTS = new TrapezoidProfile.Constraints(0,0);
+        public static final double THETACONTROLLERkP = 0.005;
+        public static final double TRAJECTORYXkP = 0.125;
+        public static final double TRAJECTORYYkP = 0.125;
+        public static final TrapezoidProfile.Constraints THETACONTROLLERCONSTRAINTS = new TrapezoidProfile.Constraints(
+            kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
 
     public static final class SHOOTER {
@@ -106,5 +110,13 @@ public final class Constants {
     public static double COMPRESSED_RADIUS = 4; //in
     public static double FLYWHEEL_RADIUS = 2.0; //in
     public static double SLIPPERINESS = 0.94;
+    }
+
+    public static final class Intake {
+        public static final int INTAKE_MOTOR = 12;
+        public static final int INDEX_MOTOR_HIGH = 14;
+        public static final int INDEX_MOTOR_LOW = 13;
+        public static final int INTAKE_SENSOR = 0;
+        public static final int INDEX_SENSOR = 1;
     }
 }
